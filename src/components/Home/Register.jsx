@@ -2,16 +2,19 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { registerApi } from "../../APIServices/usersApi/usersApi";
 import { useMutation } from "@tanstack/react-query";
+import { registerAPI } from "../../APIServices/usersApi/usersApi";
 import AlertMessage from "../Alert/AlertMessage";
 
 const Register = () => {
+  //navigate
   const navigate = useNavigate();
+  // user mutation
   const userMutation = useMutation({
-    mutationKey: ["register"],
-    mutationFn: registerApi,
+    mutationKey: ["user-registration"],
+    mutationFn: registerAPI,
   });
+  // formik config
   const formik = useFormik({
     // initial data
     initialValues: {
@@ -22,8 +25,10 @@ const Register = () => {
     // validation
     validationSchema: Yup.object({
       username: Yup.string().required("Username is required"),
-      email: Yup.string().required("email is required"),
-      password: Yup.string().required("password is required"),
+      email: Yup.string()
+        .email("Enter valid email")
+        .required("Email is required"),
+      password: Yup.string().required("Password is required"),
     }),
     // submit
     onSubmit: (values) => {
@@ -31,13 +36,13 @@ const Register = () => {
       userMutation
         .mutateAsync(values)
         .then(() => {
+          // redirect
           navigate("/login");
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((err) => console.log(err));
     },
   });
+  console.log(userMutation);
   return (
     <div className="flex flex-wrap pb-24">
       <div className="w-full  p-4">
@@ -47,19 +52,18 @@ const Register = () => {
               to="/login"
               className="inline-block text-gray-500 hover: transition duration-200 mb-8"
             >
-              <span>Already have an account?</span>
+              <span>Already have an account?</span> {""}
               <span />
               <span className="font-bold font-heading">Login</span>
             </Link>
             {/* show message */}
+            {/* show alert */}
+
             {userMutation.isPending && (
-              <AlertMessage type="loading" message="Loading please wait" />
+              <AlertMessage type="loading" message="Loading please wait..." />
             )}
             {userMutation.isSuccess && (
-              <AlertMessage
-                type="success"
-                message="Registaration successfully"
-              />
+              <AlertMessage type="success" message="Registration success" />
             )}
             {userMutation.isError && (
               <AlertMessage
@@ -67,7 +71,6 @@ const Register = () => {
                 message={userMutation.error.response.data.message}
               />
             )}
-
             <label
               className="block text-sm font-medium mb-2"
               htmlFor="textInput1"
@@ -143,7 +146,7 @@ const Register = () => {
             </button>
             {/* login with google */}
             <a
-              // href="http://localhost:9000/api/v1/users/auth/google"
+              href="http://localhost:5000/api/v1/users/auth/google"
               className="h-14 inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full bg-white w-full text-center border border-gray-100 shadow hover:bg-gray-50 focus:ring focus:ring-orange-200 transition duration-200"
               type="submit"
             >
