@@ -2,71 +2,23 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import AlertMessage from "../Alert/AlertMessage";
-import { loginAPI } from "../../APIServices/usersApi/usersApi";
 
-const Login = () => {
-  //navigate
-  const navigate = useNavigate();
-  // user mutation
-  const userMutation = useMutation({
-    mutationKey: ["user-registration"],
-    mutationFn: loginAPI,
-  });
-  // formik config
-  const formik = useFormik({
-    // initial data
-    initialValues: {
-      username: "",
-      password: "",
-    },
-    // validation
-    validationSchema: Yup.object({
-      username: Yup.string().required("Username is required"),
-      password: Yup.string().required("Password is required"),
-    }),
-    // submit
-    onSubmit: (values) => {
-      console.log(values);
-      userMutation
-        .mutateAsync(values)
-        .then(() => {
-          // redirect
-          navigate("/profile");
-        })
-        .catch((err) => console.log(err));
-    },
-  });
-  console.log(userMutation);
+const Register = () => {
   return (
     <div className="flex flex-wrap pb-24">
       <div className="w-full  p-4">
         <div className="flex flex-col justify-center py-24 max-w-md mx-auto h-full">
-          <form onSubmit={formik.handleSubmit}>
+          <form o>
             <Link
-              to="/register"
+              to="/login"
               className="inline-block text-gray-500 hover: transition duration-200 mb-8"
             >
-              <span>Don't have an account?</span> {""}
+              <span>Already have an account?</span>
               <span />
-              <span className="font-bold font-heading">Register</span>
+              <span className="font-bold font-heading">Login</span>
             </Link>
             {/* show message */}
-            {/* show alert */}
 
-            {userMutation.isPending && (
-              <AlertMessage type="loading" message="Loading please wait..." />
-            )}
-            {userMutation.isSuccess && (
-              <AlertMessage type="success" message="Login success" />
-            )}
-            {userMutation.isError && (
-              <AlertMessage
-                type="error"
-                message={userMutation.error.response.data.message}
-              />
-            )}
             <label
               className="block text-sm font-medium mb-2"
               htmlFor="textInput1"
@@ -77,12 +29,34 @@ const Login = () => {
               className="w-full rounded-full p-4 outline-none border border-gray-100 shadow placeholder-gray-500 focus:ring focus:ring-orange-200 transition duration-200 mb-4"
               type="text"
               placeholder="Enter username"
-              {...formik.getFieldProps("username")}
+              // {...formik.getFieldProps("username")}
+              // onChange={formik.handleChange}
+              // onBlur={formik.handleBlur}
+              // value={formik.values.username}
             />
             {/* error */}
-            {formik.touched.username && formik.errors.username && (
+            {/* {formik.touched.username && formik.errors.username && (
               <div className="text-red-500 mt-1">{formik.errors.username}</div>
-            )}
+            )} */}
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="textInput1"
+            >
+              Email
+            </label>
+            <input
+              className="w-full rounded-full p-4 outline-none border border-gray-100 shadow placeholder-gray-500 focus:ring focus:ring-orange-200 transition duration-200 mb-4"
+              type="text"
+              placeholder="john@email.com"
+              // {...formik.getFieldProps("email")}
+              // onChange={formik.handleChange}
+              // onBlur={formik.handleBlur}
+              // value={formik.values.email}
+            />
+            {/* error */}
+            {/* {formik.touched.email && formik.errors.email && (
+              <div className="text-red-500 mt-1">{formik.errors.email}</div>
+            )} */}
             <label
               className="block text-sm font-medium mb-2"
               htmlFor="textInput2"
@@ -95,7 +69,11 @@ const Login = () => {
                 id="textInput2"
                 type="password"
                 placeholder="Enter password"
-                {...formik.getFieldProps("password")}
+                // {...formik.getFieldProps("password")}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // value={formik.values.password}
+                // autoComplete="current-password"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -115,18 +93,18 @@ const Login = () => {
               </svg>
             </div>
             {/* error */}
-            {formik.touched.password && formik.errors.password && (
+            {/* {formik.touched.password && formik.errors.password && (
               <div className="text-red-500 mt-1">{formik.errors.password}</div>
-            )}
+            )} */}
             <button
               className="h-14 inline-flex items-center justify-center py-4 px-6 text-white font-bold font-heading rounded-full bg-orange-500 w-full text-center border border-orange-600 shadow hover:bg-orange-600 focus:ring focus:ring-orange-200 transition duration-200 mb-8"
               type="submit"
             >
-              Login{" "}
+              Sign Up
             </button>
             {/* login with google */}
             <a
-              href="http://localhost:5000/api/v1/users/auth/google"
+              // href="http://localhost:9000/api/v1/users/auth/google"
               className="h-14 inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full bg-white w-full text-center border border-gray-100 shadow hover:bg-gray-50 focus:ring focus:ring-orange-200 transition duration-200"
               type="submit"
             >
@@ -167,4 +145,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

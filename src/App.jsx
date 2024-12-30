@@ -7,12 +7,30 @@ import Home from "./components/Home/Home";
 import PostDetails from "./components/Posts/PostDetails";
 import Login from "./components/Home/Login";
 import Register from "./components/Home/Register";
+import Profile from "./components/Home/Profile";
+import PrivateNavbar from "./components/Navbar/PrivateNavbar";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { checkAuthenticatedAPI } from "./APIServices/usersApi/usersApi";
+import { useEffect } from "react";
+import { isAuthenticated } from "./redux/slice/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const { isError, isLoading, data, error, isSuccess, refetch } = useQuery({
+    queryKey: ["profile"],
+    queryFn: checkAuthenticatedAPI,
+  });
+  //dispatch to store
+  useEffect(() => {
+    dispatch(isAuthenticated(data));
+  }, [data]);
+  const { userAuth } = useSelector((state) => state.auth);
   return (
     <BrowserRouter>
+      {userAuth ? <PrivateNavbar /> : <PublicNavbar />}
       {/* Navbar */}
-      <PublicNavbar />
+
       <Routes>
         {/* create post */}
         <Route element={<Home />} path="/" />
@@ -20,6 +38,7 @@ function App() {
         <Route element={<PostsList />} path="/posts" />
         <Route element={<Login />} path="/login" />
         <Route element={<Register />} path="/register" />
+        <Route element={<Profile />} path="/profile" />
         <Route element={<PostDetails />} path="/posts/:postId" />
         {/* <Route element={<UpdatePost />} path="/posts/:postId" /> */}
         {/* <CreatePost />
