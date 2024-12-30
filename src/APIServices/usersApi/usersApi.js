@@ -41,6 +41,7 @@ export const checkAuthenticatedAPI = async () => {
     withCredentials: true,
   });
 
+  console.log(response.data);
   return response.data;
 };
 export const logoutAPI = async () => {

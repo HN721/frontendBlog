@@ -1,16 +1,17 @@
 import React from "react";
-import Login from "../Home/Login";
 import { useQuery } from "@tanstack/react-query";
-import { checkAuthenticatedAPI } from "../../APIServices/usersApi/usersApi";
 import { Navigate } from "react-router-dom";
+import { checkAuthenticatedAPI } from "../../APIServices/usersApi/usersApi";
 import AuthCheckingComponent from "../AuthCheckingComponent";
-
-export default function AuthRoute({ children }) {
+const AuthRoute = ({ children }) => {
   const { isError, isLoading, data, error, isSuccess, refetch } = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["user-auth"],
     queryFn: checkAuthenticatedAPI,
   });
+
   console.log(data);
+
+  //for loading
   if (isLoading) return <AuthCheckingComponent />;
   //in case a user is not login
   if (!data) {
@@ -18,4 +19,6 @@ export default function AuthRoute({ children }) {
   }
   //render
   return children;
-}
+};
+
+export default AuthRoute;

@@ -15,6 +15,8 @@ import { checkAuthenticatedAPI } from "./APIServices/usersApi/usersApi";
 import { useEffect } from "react";
 import { isAuthenticated } from "./redux/slice/authSlice";
 import AuthRoute from "./components/authRoute/AuthRoute";
+import UserDashbaord from "./components/User/UserDashboard";
+import AccountSummaryDashboard from "./components/User/AccountSummary";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +37,32 @@ function App() {
       <Routes>
         {/* create post */}
         <Route element={<Home />} path="/" />
-        <Route element={<CreatePost />} path="/create-post" />
+        <Route
+          element={
+            <AuthRoute>
+              <UserDashbaord />
+            </AuthRoute>
+          }
+          path="/dashboard"
+        >
+          <Route
+            element={
+              <AuthRoute>
+                <AccountSummaryDashboard />
+              </AuthRoute>
+            }
+            path=""
+          />
+          <Route
+            element={
+              <AuthRoute>
+                <CreatePost />
+              </AuthRoute>
+            }
+            path="create-post"
+          />
+        </Route>
+
         <Route element={<PostsList />} path="/posts" />
         <Route element={<Login />} path="/login" />
         <Route element={<Register />} path="/register" />
